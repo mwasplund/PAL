@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>
+        %(AdditionalIncludeDirectories);
+        $(MSBuildThisFileDirectory);
+        $(MSBuildThisFileDirectory)Async\;
+        $(MSBuildThisFileDirectory)EventLog\;
+        $(MSBuildThisFileDirectory)Scheduler\
+      </AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Async\CancellationToken.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)EventLog\EventLogger.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)EventLog\EventLogGraph.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)EventLog\EventLogParser.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='ARM'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\DependencyChain.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Fence.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Job.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\JobGroup.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\MainWorker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\PendingJobGroupRef.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Process.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\ThreadWorker.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Worker.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Async\CancellationToken.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Async\IFile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Async\IStream.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Async\Task.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Async\TaskImpl.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\EventLog\EventLog.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\EventLog\EventLogger.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\EventLog\EventLogGraph.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\EventLog\EventLogParser.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\EventLog\EventType.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\DependencyChain.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Fence.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Job.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\JobGroup.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\MainWorker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\PendingJobGroupRef.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Process.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Application.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\ThreadWorker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Worker.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)targetver.h" />
+  </ItemGroup>
+</Project>
