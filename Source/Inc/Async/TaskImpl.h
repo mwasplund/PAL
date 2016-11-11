@@ -4,7 +4,7 @@
 
 #pragma once
 #include "Worker.h"
-#include "Application.h"
+#include "Scheduler.h"
 
 namespace PAL
 {
@@ -359,7 +359,7 @@ namespace PAL
 
 			// Create the job for this task and dispatch it
 			std::shared_ptr<Job> job = std::make_shared<Job>(std::bind(&TaskImpl<TResult>::Execute, self));
-			Worker::GetActive().GetApp().DispatchJob(job);
+			Worker::GetActive().GetScheduler().DispatchJob(job);
 		}
 	};
 

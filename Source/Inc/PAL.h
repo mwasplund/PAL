@@ -36,8 +36,9 @@
 #include "JobGroup.h"
 #include "Job.h"
 
-// Application
+// Scheduler
 #include "MainWorker.h"
+#include "Scheduler.h"
 #include "Application.h"
 #include "ThreadWorker.h"
 #include "Worker.h"

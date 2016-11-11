@@ -46,7 +46,7 @@ namespace PAL
 		/// Attach a continuation
 		/// </summary>
 		template<typename TNextResult>
-		Task<TNextResult> operator>>(std::function<TNextResult(Task<TResult>)> function)
+		Task<TNextResult> Then(std::function<TNextResult(Task<TResult>)> function)
 		{
 			std::shared_ptr<TaskImpl<TNextResult>> impl = _pimpl->Then(function);
 			return Task<TNextResult>(impl);
@@ -59,6 +59,9 @@ namespace PAL
 		std::shared_ptr<TaskImpl<TResult>> _pimpl;
 	};
 
+	/// <summary>
+	/// Specialize task for no return value
+	/// </summary>
 	template<>
 	class Task<void>
 	{
@@ -77,7 +80,7 @@ namespace PAL
 		/// </summary>
 		void Get()
 		{
-			return _pimpl->Get();
+			_pimpl->Get();
 		}
 
 		/// <summary>

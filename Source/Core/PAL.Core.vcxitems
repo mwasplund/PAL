@@ -37,6 +37,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\PendingJobGroupRef.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Process.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Scheduler.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\ThreadWorker.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Worker.cpp" />
   </ItemGroup>
@@ -59,9 +60,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\PendingJobGroupRef.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Process.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Application.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Scheduler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\ThreadWorker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Worker.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)targetver.h" />
   </ItemGroup>
 </Project>

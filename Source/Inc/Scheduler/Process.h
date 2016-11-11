@@ -56,7 +56,7 @@ namespace PAL
 		/// Get all available jobs
 		/// This will check for all completed fences for groups that have not run yet
 		/// </summary>
-		std::vector<std::shared_ptr<Job>> GetAvailableJobs(Application& app);
+		std::vector<std::shared_ptr<Job>> GetAvailableJobs(Scheduler& scheduler);
 
 		/// <summary>
 		/// Assign colors to each work item

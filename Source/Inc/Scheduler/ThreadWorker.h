@@ -16,7 +16,7 @@ namespace PAL
 		/// <summary>
 		/// Initialize a new instance of the ThreadWorker class
 		/// </summary>
-		ThreadWorker(Application& app);
+		ThreadWorker(Scheduler& app);
 
 		/// <summary>
 		/// Initialize

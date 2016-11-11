@@ -16,7 +16,7 @@ namespace PAL
 		/// <summary>
 		/// Initialize a new instance of the MainWorker class
 		/// </summary>
-		MainWorker(Application& app);
+		MainWorker(Scheduler& scheduler);
 
 	protected:
 		/// <summary>

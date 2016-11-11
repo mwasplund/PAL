@@ -31,6 +31,7 @@ namespace PAL
 
 	// Scheduler
 	class MainWorker;
+	class Scheduler;
 	class Application;
 	class ThreadWorker;
 	class Worker;

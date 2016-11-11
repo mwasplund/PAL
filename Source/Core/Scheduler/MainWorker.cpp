@@ -4,18 +4,18 @@
 
 #include "pch.h"
 #include "MainWorker.h"
-#include "Application.h"
+#include "Scheduler.h"
 
 namespace PAL
 {
-	MainWorker::MainWorker(Application& app) :
-		Worker(app)
+	MainWorker::MainWorker(Scheduler& scheduler) :
+		Worker(scheduler)
 	{
 	}
 
 	bool MainWorker::IsRunning()
 	{
-		return !_app.IsProcessCompleted();
+		return !_scheduler.IsProcessCompleted();
 	}
 
 } // PAL

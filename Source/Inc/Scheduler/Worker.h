@@ -27,7 +27,7 @@ namespace PAL
 		/// <summary>
 		/// Initialize a new instance of the Worker class
 		/// </summary>
-		Worker(Application& app);
+		Worker(Scheduler& scheduler);
 
 		/// <summary>
 		/// Run Main Main Loop
@@ -50,20 +50,25 @@ namespace PAL
 		EventLogger& GetLogger();
 
 		/// <summary>
-		/// Get the application
+		/// Get the Scheduler
 		/// </summary>
-		Application& GetApp();
+		Scheduler& GetScheduler();
 
 	protected:
+		/// <summary>
+		/// Find work
+		/// </summary>
+		std::shared_ptr<Job> FindWork();
+
 		/// <summary>
 		/// Is Running
 		/// </summary>
 		virtual bool IsRunning() = 0;
 
 		/// <summary>
-		/// The application
+		/// The scheduler
 		/// </summary>
-		Application& _app;
+		Scheduler& _scheduler;
 
 		/// <summary>
 		/// The mutex

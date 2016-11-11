@@ -91,7 +91,7 @@ namespace PAL
 		return true;
 	}
 
-	std::vector<std::shared_ptr<Job>> Process::GetAvailableJobs(Application& app)
+	std::vector<std::shared_ptr<Job>> Process::GetAvailableJobs(Scheduler& scheduler)
 	{
 		// lock to ensure we are the only ones touching the jobs
 		std::lock_guard<std::mutex> lock(_mutex);

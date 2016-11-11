@@ -6,7 +6,7 @@
 #include "Job.h"
 
 #include "Fence.h"
-#include "Application.h"
+#include "Scheduler.h"
 #include "Worker.h"
 #include "EventType.h"
 
@@ -46,7 +46,7 @@ namespace PAL
 		if (_fence != nullptr && _fence->Signal())
 		{
 			// We have finished running all jobs for this fence
-			Worker::GetActive().GetApp().UpdateProcess();
+			Worker::GetActive().GetScheduler().UpdateProcess();
 		}
 	}
 

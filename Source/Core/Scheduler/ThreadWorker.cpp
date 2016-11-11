@@ -7,8 +7,8 @@
 
 namespace PAL
 {
-	ThreadWorker::ThreadWorker(Application& app) :
-		Worker(app),
+	ThreadWorker::ThreadWorker(Scheduler& scheduler) :
+		Worker(scheduler),
 		_running(false)
 	{
 	}

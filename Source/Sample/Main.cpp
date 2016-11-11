@@ -15,16 +15,26 @@ int main()
 	PAL::JobGroup& mainGroup = process->CreateJobGroup();
 	PAL::Job& job = mainGroup.CreateJob([]()
 	{
-		std::wcout << "Open File..." << std::endl;
+		std::wcout << L"Open File..." << std::endl;
 
-		std::function<void(PAL::Task<std::shared_ptr<PAL::IFile>>)> func = 
+		PAL::IFile::GetFileFromPathAsync(L"TestFile.txt").Then<void>(
 			[](PAL::Task<std::shared_ptr<PAL::IFile>> task)
 			{
+				std::wcout << L"File Opened." << std::endl;
 				std::shared_ptr<PAL::IFile> file = task.Get();
-			};
+			});
 
-		PAL::IFile::GetFileFromPathAsync(L"TestFile.txt") >> func;
+		int value = PAL::Task<int>::Create(
+			[]() -> int
+			{
+				return 1 + 1;
+			}).Then<int>(
+				[](PAL::Task<int> result) -> int
+				{
+					return result.Get() * 5;
+				}).Get();
 
+		value++;
 	}, true);
 
 	std::wcout << L"Run Application..." << std::endl;
@@ -32,7 +42,7 @@ int main()
 	PAL::Application app(std::move(process), 4);
 	app.Run();
 
-	std::wcout << L"Done Application." << std::endl;
+	std::wcout << L"Application Done!" << std::endl;
 
 	std::wcout << L"Create Graph..." << std::endl;
 

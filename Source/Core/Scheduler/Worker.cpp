@@ -21,9 +21,9 @@ namespace PAL
 		return *ActiveWorker;
 	}
 
-	Worker::Worker(Application& app) :
+	Worker::Worker(Scheduler& scheduler) :
 		_mutex(),
-		_app(app),
+		_scheduler(scheduler),
 		_jobs(),
 		_completedJobCount(0),
 		_logger()
@@ -46,24 +46,7 @@ namespace PAL
 
 		while (IsRunning())
 		{
-			std::shared_ptr<Job> job = nullptr;
-
-			{
-				// lock to ensure we are the only ones touching the jobs
-				std::lock_guard<std::mutex> lock(_mutex);
-
-				if (!_jobs.empty())
-				{
-					job = move(_jobs.front());
-					_jobs.pop();
-				}
-				else
-				{
-					// play nice
-					// this_thread::sleep_for(10ms);
-				}
-			}
-
+			std::shared_ptr<Job> job = FindWork();
 			if (job != nullptr)
 			{
 				_logger.LogEvent(EventType::WorkerExecuteJobBegin, _id);
@@ -100,9 +83,33 @@ namespace PAL
 		return _logger;
 	}
 
-	Application& Worker::GetApp()
+	Scheduler& Worker::GetScheduler()
 	{
-		return _app;
+		return _scheduler;
+	}
+
+	std::shared_ptr<Job> Worker::FindWork()
+	{
+		std::shared_ptr<Job> result = nullptr;
+
+		// Check the local 
+		{
+			// lock to ensure we are the only ones touching the jobs
+			std::lock_guard<std::mutex> lock(_mutex);
+
+			if (!_jobs.empty())
+			{
+				result = move(_jobs.front());
+				_jobs.pop();
+			}
+			else
+			{
+				// play nice
+				// this_thread::sleep_for(10ms);
+			}
+		}
+
+		return result;
 	}
 
 } // PAL
