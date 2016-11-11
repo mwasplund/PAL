@@ -22,7 +22,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{411DD711-BE30-43D9-BBF2-8EFC83EE1D09}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>SchedulezSample</RootNamespace>
+    <RootNamespace>PAL</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
