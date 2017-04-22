@@ -8,33 +8,33 @@
 namespace PAL
 {
 	Fence::Fence() :
-		_initialJobCount(0),
-		_remainingJobCount(0)
+		m_initialJobCount(0),
+		m_remainingJobCount(0)
 	{
 	}
 
 	void Fence::SetJobCount(unsigned int value)
 	{
-		_initialJobCount = value;
-		_remainingJobCount = value;
+		m_initialJobCount = value;
+		m_remainingJobCount = value;
 	}
 
 	bool Fence::Signal()
 	{
 		// Decrement the atomic integer, only one thread will ever see zero remaining
-		unsigned int remaining = _remainingJobCount--;
+		unsigned int remaining = m_remainingJobCount--;
 		bool completed = (remaining == 1);
 		return completed;
 	}
 
 	bool Fence::Completed() const
 	{
-		return _remainingJobCount == 0;
+		return m_remainingJobCount == 0;
 	}
 
 	void Fence::Reset()
 	{
-		_remainingJobCount = _initialJobCount;
+		m_remainingJobCount = m_initialJobCount;
 	}
 
 } // PAL

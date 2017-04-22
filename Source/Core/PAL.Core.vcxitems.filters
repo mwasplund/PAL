@@ -55,72 +55,76 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Application.cpp">
       <Filter>Scheduler</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Scheduler.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Scheduler\Scheduler.cpp">
+      <Filter>Scheduler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\DependencyChain.h">
-      <Filter>Scheduler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Fence.h">
-      <Filter>Scheduler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Job.h">
-      <Filter>Scheduler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\JobGroup.h">
-      <Filter>Scheduler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\MainWorker.h">
-      <Filter>Scheduler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\PendingJobGroupRef.h">
-      <Filter>Scheduler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Process.h">
-      <Filter>Scheduler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\ThreadWorker.h">
-      <Filter>Scheduler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Worker.h">
-      <Filter>Scheduler</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\EventLog\EventLog.h">
-      <Filter>EventLog</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\EventLog\EventLogger.h">
-      <Filter>EventLog</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\EventLog\EventLogGraph.h">
-      <Filter>EventLog</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\EventLog\EventLogParser.h">
-      <Filter>EventLog</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\EventLog\EventType.h">
-      <Filter>EventLog</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Async\CancellationToken.h">
-      <Filter>Async</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Async\IFile.h">
-      <Filter>Async</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Async\IStream.h">
-      <Filter>Async</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Async\Task.h">
-      <Filter>Async</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Async\TaskImpl.h">
-      <Filter>Async</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Application.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)PAL.Forward.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)PAL.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Async\CancellationToken.h">
+      <Filter>Async</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Async\IFile.h">
+      <Filter>Async</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Async\IStream.h">
+      <Filter>Async</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Async\Task.h">
+      <Filter>Async</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventLog\EventLog.h">
+      <Filter>EventLog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventLog\EventLogger.h">
+      <Filter>EventLog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventLog\EventLogGraph.h">
+      <Filter>EventLog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventLog\EventLogParser.h">
+      <Filter>EventLog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)EventLog\EventType.h">
+      <Filter>EventLog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\Application.h">
       <Filter>Scheduler</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\Inc\Scheduler\Scheduler.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\DependencyChain.h">
       <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\Fence.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\Job.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\JobGroup.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\MainWorker.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\PendingJobGroupRef.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\Process.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\Scheduler.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\ThreadWorker.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Scheduler\Worker.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Async\SharedTask.h">
+      <Filter>Async</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

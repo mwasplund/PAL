@@ -22,19 +22,19 @@ namespace PAL
 	}
 
 	Worker::Worker(Scheduler& scheduler) :
-		_mutex(),
-		_scheduler(scheduler),
-		_jobs(),
-		_completedJobCount(0),
-		_logger()
+		m_mutex(),
+		m_scheduler(scheduler),
+		m_jobs(),
+		m_completedJobCount(0),
+		m_logger()
 	{
-		static uint32_t uniqueId = 1;
-		_id = uniqueId++;
+		static uint32_t s_uniqueId = 1;
+		m_id = s_uniqueId++;
 	}
 
 	void Worker::MainLoop()
 	{
-		_logger.LogEvent(EventType::WorkerBegin, _id);
+		m_logger.LogEvent(EventType::WorkerBegin, m_id);
 
 		// Register this worker for this thread
 		if (ActiveWorker != nullptr)
@@ -49,43 +49,43 @@ namespace PAL
 			std::shared_ptr<Job> job = FindWork();
 			if (job != nullptr)
 			{
-				_logger.LogEvent(EventType::WorkerExecuteJobBegin, _id);
+				m_logger.LogEvent(EventType::WorkerExecuteJobBegin, m_id);
 				job->Execute();
-				_completedJobCount++;
-				_logger.LogEvent(EventType::WorkerExecuteJobEnd, _id);
+				m_completedJobCount++;
+				m_logger.LogEvent(EventType::WorkerExecuteJobEnd, m_id);
 			}
 		}
 
 		// Remove this worker from the thread active worker
 		ActiveWorker = nullptr;
 
-		_logger.LogEvent(EventType::WorkerEnd, _id);
+		m_logger.LogEvent(EventType::WorkerEnd, m_id);
 	}
 
 	void Worker::RegisterJobs(std::vector<std::shared_ptr<Job>>&& jobs)
 	{
 		// lock to ensure we are the only ones touching the jobs
-		std::lock_guard<std::mutex> lock(_mutex);
+		std::lock_guard<std::mutex> lock(m_mutex);
 
 		for (std::shared_ptr<Job>& job : jobs)
 		{
-			_jobs.push(std::move(job));
+			m_jobs.push(std::move(job));
 		}
 	}
 
 	uint64_t Worker::GetCompletedJobCount() const
 	{
-		return _completedJobCount;
+		return m_completedJobCount;
 	}
 
 	EventLogger& Worker::GetLogger()
 	{
-		return _logger;
+		return m_logger;
 	}
 
 	Scheduler& Worker::GetScheduler()
 	{
-		return _scheduler;
+		return m_scheduler;
 	}
 
 	std::shared_ptr<Job> Worker::FindWork()
@@ -95,12 +95,12 @@ namespace PAL
 		// Check the local 
 		{
 			// lock to ensure we are the only ones touching the jobs
-			std::lock_guard<std::mutex> lock(_mutex);
+			std::lock_guard<std::mutex> lock(m_mutex);
 
-			if (!_jobs.empty())
+			if (!m_jobs.empty())
 			{
-				result = move(_jobs.front());
-				_jobs.pop();
+				result = std::move(m_jobs.front());
+				m_jobs.pop();
 			}
 			else
 			{

@@ -13,19 +13,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PAL.WinRT", "WinRT\PAL.WinR
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PAL.WinRT.DLL", "WinRT.DLL\PAL.WinRT.DLL.vcxproj", "{EA641346-7451-4AEC-8482-FEC48173B537}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PAL.Inc", "Inc\PAL.Inc.vcxitems", "{D4E5EC8E-D216-4CC2-99A5-DB5586E4AE8D}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Core\PAL.Core.vcxitems*{1007f1de-8bc9-4761-a81f-074fdd180e59}*SharedItemsImports = 4
-		Inc\PAL.Inc.vcxitems*{1007f1de-8bc9-4761-a81f-074fdd180e59}*SharedItemsImports = 4
 		Core\PAL.Core.vcxitems*{2db9b084-d28d-4c26-a9d7-99d65103132a}*SharedItemsImports = 4
-		Inc\PAL.Inc.vcxitems*{2db9b084-d28d-4c26-a9d7-99d65103132a}*SharedItemsImports = 4
-		Inc\PAL.Inc.vcxitems*{411dd711-be30-43d9-bbf2-8efc83ee1d09}*SharedItemsImports = 4
 		Core\PAL.Core.vcxitems*{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}*SharedItemsImports = 9
-		Inc\PAL.Inc.vcxitems*{d4e5ec8e-d216-4cc2-99a5-db5586e4ae8d}*SharedItemsImports = 9
 		Core\PAL.Core.vcxitems*{ea641346-7451-4aec-8482-fec48173b537}*SharedItemsImports = 4
-		Inc\PAL.Inc.vcxitems*{ea641346-7451-4aec-8482-fec48173b537}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM

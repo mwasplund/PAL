@@ -11,20 +11,20 @@
 namespace PAL
 {
 	PendingJobGroupRef::PendingJobGroupRef(JobGroup& jobGroup, std::vector<Fence*>&& dependencies) :
-		_scheduled(false),
-		_jobGroup(jobGroup),
-		_dependencies(move(dependencies))
+		m_scheduled(false),
+		m_jobGroup(jobGroup),
+		m_dependencies(std::move(dependencies))
 	{
 	}
 
 	JobGroup& PendingJobGroupRef::GetJobGroup()
 	{
-		return _jobGroup;
+		return m_jobGroup;
 	}
 
 	bool PendingJobGroupRef::Blocked() const
 	{
-		for (const auto& fence : _dependencies)
+		for (const auto& fence : m_dependencies)
 		{
 			if (!fence->Completed())
 			{
@@ -37,18 +37,18 @@ namespace PAL
 
 	void PendingJobGroupRef::SetScheduled()
 	{
-		_scheduled = true;
+		m_scheduled = true;
 	}
 
 	bool PendingJobGroupRef::Scheduled() const
 	{
-		return _scheduled;
+		return m_scheduled;
 	}
 
 	void PendingJobGroupRef::Reset()
 	{
-		_scheduled = false;
-		_jobGroup.GetFence().Reset();
+		m_scheduled = false;
+		m_jobGroup.GetFence().Reset();
 	}
 
 } // PAL

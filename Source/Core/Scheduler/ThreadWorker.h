@@ -43,12 +43,12 @@ namespace PAL
 		/// <summary>
 		/// A value indicating if the worker is running
 		/// </summary>
-		bool _running;
+		bool m_running;
 
 		/// <summary>
 		/// The thread
 		/// </summary>
-		std::unique_ptr<std::thread> _thread;
+		std::unique_ptr<std::thread> m_thread;
 	};
 
 } // PAL

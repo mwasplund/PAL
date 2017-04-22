@@ -46,17 +46,17 @@ namespace PAL
 		/// <summary>
 		/// Is scheduled
 		/// </summary>
-		bool _scheduled;
+		bool m_scheduled;
 
 		/// <summary>
 		/// The job group
 		/// </summary>
-		JobGroup& _jobGroup;
+		JobGroup& m_jobGroup;
 
 		/// <summary>
 		/// The dependecies
 		/// </summary>
-		std::vector<Fence*> _dependencies;
+		std::vector<Fence*> m_dependencies;
 	};
 
 } // PAL

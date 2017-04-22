@@ -7,6 +7,7 @@
 // STL
 #include <string>
 #include <vector>
+#include <memory>
 #include <mutex>
 #include <unordered_map>
 #include <atomic>
@@ -19,7 +20,7 @@
 #include "IFile.h"
 #include "IStream.h"
 #include "Task.h"
-#include "TaskImpl.h"
+#include "SharedTask.h"
 
 // EventLogger
 #include "EventLog.h"

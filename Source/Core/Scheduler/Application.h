@@ -43,7 +43,7 @@ namespace PAL
 		/// <summary>
 		/// The mutex
 		/// </summary>
-		Scheduler _scheduler;
+		Scheduler m_scheduler;
 	};
 
 } // PAL

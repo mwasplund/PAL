@@ -9,39 +9,39 @@
 namespace PAL
 {
 	Process::Process(uint32_t totalPasses) :
-		_forceCompleted(false),
-		_totalPasses(totalPasses),
-		_currentPass(1),
-		_mutex(),
-		_dependencyChain(),
-		_jobGroups(),
-		_activeJobGroups()
+		m_forceCompleted(false),
+		m_totalPasses(totalPasses),
+		m_currentPass(1),
+		m_mutex(),
+		m_dependencyChain(),
+		m_jobGroups(),
+		m_activeJobGroups()
 	{
 	}
 
 	DependencyChain& Process::GetDependencyChain()
 	{
-		return _dependencyChain;
+		return m_dependencyChain;
 	}
 
 	JobGroup& Process::CreateJobGroup()
 	{
-		_jobGroups.push_back(std::make_unique<JobGroup>());
-		return *_jobGroups[_jobGroups.size() - 1];
+		m_jobGroups.push_back(std::make_unique<JobGroup>());
+		return *m_jobGroups[m_jobGroups.size() - 1];
 	}
 
 	void Process::Initialize()
 	{
 		// lock to ensure we are the only ones touching the jobs
-		std::lock_guard<std::mutex> lock(_mutex);
+		std::lock_guard<std::mutex> lock(m_mutex);
 
 		// Add every group to the pending list and map dependencies to parent fences
-		for (auto& jobGroup : _jobGroups)
+		for (auto& jobGroup : m_jobGroups)
 		{
 			std::vector<Fence*> dependencies;
 
 			// Check every edge for dependencies
-			for (const auto& edge : _dependencyChain.GetDependecies())
+			for (const auto& edge : m_dependencyChain.GetDependecies())
 			{
 				// If we are the child add the parent fence as a dependecy
 				if (edge.second == jobGroup->GetId())
@@ -53,21 +53,21 @@ namespace PAL
 				}
 			}
 
-			_activeJobGroups.emplace_back(*jobGroup, move(dependencies));
+			m_activeJobGroups.emplace_back(*jobGroup, move(dependencies));
 		}
 	}
 
 	bool Process::IsCompleted()
 	{
-		if (_forceCompleted)
+		if (m_forceCompleted)
 		{
 			return true;
 		}
 
 		// Total passes of zero means run forever
-		if (_totalPasses != 0)
+		if (m_totalPasses != 0)
 		{
-			if (_totalPasses == _currentPass)
+			if (m_totalPasses == m_currentPass)
 			{
 				return IsPassCompleted();
 			}
@@ -79,7 +79,7 @@ namespace PAL
 	bool Process::IsPassCompleted()
 	{
 		// Check if all fences are done
-		for (const auto& JobGroup : _jobGroups)
+		for (const auto& JobGroup : m_jobGroups)
 		{
 			if (!JobGroup->GetFence().Completed())
 			{
@@ -94,7 +94,7 @@ namespace PAL
 	std::vector<std::shared_ptr<Job>> Process::GetAvailableJobs(Scheduler& scheduler)
 	{
 		// lock to ensure we are the only ones touching the jobs
-		std::lock_guard<std::mutex> lock(_mutex);
+		std::lock_guard<std::mutex> lock(m_mutex);
 
 		std::vector<std::shared_ptr<Job>> result;
 
@@ -104,7 +104,7 @@ namespace PAL
 		}
 
 		// Find all the pending job groups that are no longer blocked
-		for (auto& jobGroup : _activeJobGroups)
+		for (auto& jobGroup : m_activeJobGroups)
 		{
 			if (!jobGroup.Blocked() && !jobGroup.Scheduled())
 			{
@@ -139,7 +139,7 @@ namespace PAL
 
 		// Pick similar colors for each group
 		size_t colorIndex = 0;
-		for (const auto& jobGroup : _jobGroups)
+		for (const auto& jobGroup : m_jobGroups)
 		{
 			std::array<float, 3> groupColor = colors[colorIndex];
 			colorIndex = (colorIndex + 1) % colors.size();
@@ -167,14 +167,14 @@ namespace PAL
 	void Process::ForceCompleted()
 	{
 		// lock to ensure we are the only ones touching the work items
-		std::lock_guard<std::mutex> lock(_mutex);
+		std::lock_guard<std::mutex> lock(m_mutex);
 
-		_forceCompleted = true;
+		m_forceCompleted = true;
 	}
 
 	JobGroup& Process::GetJobGroup(uint32_t id)
 	{
-		for (auto& JobGroup : _jobGroups)
+		for (auto& JobGroup : m_jobGroups)
 		{
 			if (JobGroup->GetId() == id)
 			{
@@ -188,13 +188,13 @@ namespace PAL
 	void Process::MoveToNextPass()
 	{
 		// Reset all work groups
-		for (auto& JobGroup : _activeJobGroups)
+		for (auto& JobGroup : m_activeJobGroups)
 		{
 			JobGroup.Reset();
 		}
 
 		// Increment the pass count
-		_currentPass++;
+		m_currentPass++;
 	}
 
 } // PAL

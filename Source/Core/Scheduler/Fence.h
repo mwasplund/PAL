@@ -41,12 +41,12 @@ namespace PAL
 		/// <summary>
 		/// The initial job count
 		/// </summary>
-		unsigned int _initialJobCount;
+		unsigned int m_initialJobCount;
 
 		/// <summary>
 		/// The remaining job count
 		/// </summary>
-		std::atomic_uint _remainingJobCount;
+		std::atomic_uint m_remainingJobCount;
 	};
 
 } // PAL

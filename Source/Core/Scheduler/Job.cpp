@@ -12,14 +12,13 @@
 
 namespace PAL
 {
-	uint32_t Job::_uniqueId = 1;
-
-	Job::Job(std::function<void(void)> function, bool runOnMainThread, Fence* fence) :
-		_id(_uniqueId++),
-		_function(function),
-		_runOnMainThread(runOnMainThread),
-		_fence(fence)
+	Job::Job(std::function<void(void)>&& function, bool runOnMainThread, Fence* fence) :
+		m_function(function),
+		m_runOnMainThread(runOnMainThread),
+		m_fence(fence)
 	{
+		static uint32_t s_uniqueId = 0;
+		m_id = s_uniqueId++;
 	}
 
 	Job::~Job()
@@ -28,22 +27,22 @@ namespace PAL
 
 	uint32_t Job::GetId() const
 	{
-		return _id;
+		return m_id;
 	}
 
 	bool Job::RunOnMainThread() const
 	{
-		return _runOnMainThread;
+		return m_runOnMainThread;
 	}
 
 	void Job::Execute()
 	{
 		Worker::GetActive().GetLogger().LogEvent(EventType::JobBegin, GetId());
-		_function();
+		m_function();
 		Worker::GetActive().GetLogger().LogEvent(EventType::JobEnd, GetId());
 
 		// Signal that this job has finished
-		if (_fence != nullptr && _fence->Signal())
+		if (m_fence != nullptr && m_fence->Signal())
 		{
 			// We have finished running all jobs for this fence
 			Worker::GetActive().GetScheduler().UpdateProcess();

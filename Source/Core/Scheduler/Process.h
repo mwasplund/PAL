@@ -82,37 +82,37 @@ namespace PAL
 		/// <summary>
 		/// A value indicating whether the process was forced completed
 		/// </summary>
-		bool _forceCompleted;
+		bool m_forceCompleted;
 
 		/// <summary>
 		/// The total number of passes
 		/// </summary>
-		uint32_t _totalPasses;
+		uint32_t m_totalPasses;
 
 		/// <summary>
 		/// The current pass number
 		/// </summary>
-		uint32_t _currentPass;
+		uint32_t m_currentPass;
 
 		/// <summary>
 		/// The mutex
 		/// </summary>
-		std::mutex _mutex;
+		std::mutex m_mutex;
 
 		/// <summary>
 		/// The dependency chain
 		/// </summary>
-		DependencyChain _dependencyChain;
+		DependencyChain m_dependencyChain;
 
 		/// <summary>
 		/// The work groups
 		/// </summary>
-		std::vector<std::unique_ptr<JobGroup>> _jobGroups;
+		std::vector<std::unique_ptr<JobGroup>> m_jobGroups;
 
 		/// <summary>
 		/// The active work groups
 		/// </summary>
-		std::vector<PendingJobGroupRef> _activeJobGroups;
+		std::vector<PendingJobGroupRef> m_activeJobGroups;
 	};
 
 } // PAL

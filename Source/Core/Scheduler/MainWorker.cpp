@@ -15,7 +15,7 @@ namespace PAL
 
 	bool MainWorker::IsRunning()
 	{
-		return !_scheduler.IsProcessCompleted();
+		return !m_scheduler.IsProcessCompleted();
 	}
 
 } // PAL

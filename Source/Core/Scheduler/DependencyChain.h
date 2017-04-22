@@ -36,12 +36,12 @@ namespace PAL
 		/// <summary>
 		/// The collection of dependecies
 		/// </summary>
-		std::vector<std::pair<uint32_t, uint32_t>> _dependencies;
+		std::vector<std::pair<uint32_t, uint32_t>> m_dependencies;
 
 		/// <summary>
 		/// The topologically sorted groups
 		/// </summary>
-		std::vector<uint32_t> _sortedGroups;
+		std::vector<uint32_t> m_sortedGroups;
 	};
 
 } // PAL

@@ -8,14 +8,14 @@
 namespace PAL
 {
 	DependencyChain::DependencyChain() :
-		_dependencies(),
-		_sortedGroups()
+		m_dependencies(),
+		m_sortedGroups()
 	{
 	}
 
 	void DependencyChain::DependsOn(uint32_t parent, uint32_t child)
 	{
-		_dependencies.emplace_back(parent, child);
+		m_dependencies.emplace_back(parent, child);
 
 		if (!SortGraph())
 		{
@@ -23,7 +23,7 @@ namespace PAL
 		}
 
 		std::wcout << L"Sorted: ";
-		for (uint32_t n : _sortedGroups)
+		for (uint32_t n : m_sortedGroups)
 		{
 			std::wcout << n << L' ';
 		}
@@ -33,14 +33,14 @@ namespace PAL
 
 	const std::vector<std::pair<uint32_t, uint32_t>>& DependencyChain::GetDependecies() const
 	{
-		return _dependencies;
+		return m_dependencies;
 	}
 
 	bool DependencyChain::SortGraph()
 	{
 		// Clear old sorted list
-		_sortedGroups.clear();
-		std::vector<std::pair<uint32_t, uint32_t>> graph(_dependencies);
+		m_sortedGroups.clear();
+		std::vector<std::pair<uint32_t, uint32_t>> graph(m_dependencies);
 
 		// Find all nodes with no incoming edges
 		std::set<uint32_t> edgeNodes;
@@ -66,7 +66,7 @@ namespace PAL
 			edgeNodes.erase(node);
 
 			// Add the edge node to the sorted list
-			_sortedGroups.push_back(node);
+			m_sortedGroups.push_back(node);
 
 			if (!graph.empty())
 			{

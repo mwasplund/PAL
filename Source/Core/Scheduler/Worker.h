@@ -4,6 +4,7 @@
 
 #pragma once
 #include "EventLogger.h"
+#include "Job.h"
 
 namespace PAL
 {
@@ -68,32 +69,32 @@ namespace PAL
 		/// <summary>
 		/// The scheduler
 		/// </summary>
-		Scheduler& _scheduler;
+		Scheduler& m_scheduler;
 
 		/// <summary>
 		/// The mutex
 		/// </summary>
-		std::mutex _mutex;
+		std::mutex m_mutex;
 
 		/// <summary>
 		/// The count of completed jobs
 		/// </summary>
-		uint64_t _completedJobCount;
+		uint64_t m_completedJobCount;
 
 		/// <summary>
 		/// The pending jobs on this worker
 		/// </summary>
-		std::queue<std::shared_ptr<Job>> _jobs;
+		std::queue<std::shared_ptr<Job>> m_jobs;
 
 		/// <summary>
 		/// The event logger
 		/// </summary>
-		EventLogger _logger;
+		EventLogger m_logger;
 
 		/// <summary>
 		/// The worker id
 		/// </summary>
-		uint32_t _id;
+		uint32_t m_id;
 	};
 
 } // PAL

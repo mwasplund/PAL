@@ -11,28 +11,28 @@
 namespace PAL
 {
 	Application::Application(std::unique_ptr<Process>&& mainProcess, size_t workerCount) :
-		_scheduler(std::move(mainProcess), workerCount)
+		m_scheduler(std::move(mainProcess), workerCount)
 	{
 	}
 
 	void Application::Run()
 	{
-		_scheduler.Run();
+		m_scheduler.Run();
 	}
 
 	bool Application::IsProcessCompleted()
 	{
-		return _scheduler.IsProcessCompleted();
+		return m_scheduler.IsProcessCompleted();
 	}
 
 	void Application::PrintLogs(std::chrono::high_resolution_clock::time_point referenceTime)
 	{
-		_scheduler.PrintLogs(referenceTime);
+		m_scheduler.PrintLogs(referenceTime);
 	}
 
 	void Application::GenerateGraph(const std::wstring& filename)
 	{
-		_scheduler.GenerateGraph(filename);
+		m_scheduler.GenerateGraph(filename);
 	}
 
 } // PAL

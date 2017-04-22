@@ -33,7 +33,7 @@ namespace PAL
 		/// <summary>
 		/// Dispatch job
 		/// </summary>
-		void DispatchJob(std::shared_ptr<Job> job);
+		void DispatchJob(std::shared_ptr<Job>&& job);
 
 		/// <summary>
 		/// Dispatch jobs
@@ -59,31 +59,31 @@ namespace PAL
 		/// <summary>
 		/// The mutex
 		/// </summary>
-		std::mutex _mutex;
+		std::mutex m_mutex;
 
 		/// <summary>
 		/// The main process
 		/// </summary>
-		std::unique_ptr<Process> _mainProcess;
+		std::unique_ptr<Process> m_mainProcess;
 
 		/// <summary>
 		/// The main worker
 		/// </summary>
-		std::unique_ptr<MainWorker> _mainWorker;
+		std::unique_ptr<MainWorker> m_mainWorker;
 
 		/// <summary>
 		/// The number of workers
 		/// </summary>
-		size_t _workerCount;
+		size_t m_workerCount;
 
 		/// <summary>
 		/// The background workers
 		/// </summary>
-		std::vector<std::unique_ptr<ThreadWorker>> _backgroundWorkers;
+		std::vector<std::unique_ptr<ThreadWorker>> m_backgroundWorkers;
 
 		/// <summary>
 		/// The count of dispatched jobs
 		/// </summary>
-		uint64_t _dispatchedJobsCount;
+		uint64_t m_dispatchedJobsCount;
 	};
 } // PAL

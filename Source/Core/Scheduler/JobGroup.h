@@ -13,12 +13,6 @@ namespace PAL
 	/// </summary>
 	class JobGroup
 	{
-	private:
-		/// <summary>
-		/// Unique Id for all work groups
-		/// </summary>
-		static uint32_t _uniqueId;
-
 	public:
 		/// <summary>
 		/// Initialize a new instance of the JobGroup class
@@ -54,7 +48,7 @@ namespace PAL
 		/// <summary>
 		/// Create a job
 		/// </summary>
-		Job& CreateJob(std::function<void(void)> function, bool runOnMainThread = false);
+		Job& CreateJob(std::function<void(void)>&& function, bool runOnMainThread = false);
 
 		/// <summary>
 		/// Get the fence
@@ -65,17 +59,17 @@ namespace PAL
 		/// <summary>
 		/// The work group id
 		/// </summary>
-		uint32_t _id;
+		uint32_t m_id;
 
 		/// <summary>
 		/// The work items
 		/// </summary>
-		std::vector<std::shared_ptr<Job>> _jobs;
+		std::vector<std::shared_ptr<Job>> m_jobs;
 
 		/// <summary>
 		/// The fence for this group
 		/// </summary>
-		Fence _fence;
+		Fence m_fence;
 	};
 
 } // PAL
