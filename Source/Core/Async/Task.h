@@ -13,8 +13,10 @@ namespace PAL
 	template<typename TResult>
 	class Task
 	{
-		template<typename TOther>
+		template<typename TOtherResult>
 		friend class Task;
+		template<typename TOtherResult, typename TOtherParam>
+		friend class SharedTask;
 
 	public:
 		/// <summary>
@@ -52,8 +54,8 @@ namespace PAL
 	/*static*/ Task<TResult> Task<TResult>::Create(std::function<TResult(void)>&& function)
 	{
 		// Create the implemementation task
-		std::shared_ptr<SharedTask<void, TResult>> sharedTask =
-			SharedTask<void, TResult>::Create(std::move(function));
+		std::shared_ptr<SharedTask<TResult, void>> sharedTask =
+			SharedTask<TResult, void>::CreateAndSchedule(std::move(function));
 		return Task<TResult>(std::move(sharedTask));
 	}
 
@@ -68,7 +70,7 @@ namespace PAL
 	Task<TNextResult> Task<TResult>::Then(
 		std::function<TNextResult(Task<TResult>)>&& function)
 	{
-		std::shared_ptr<SharedTask<TResult, TNextResult>> nextShared =
+		std::shared_ptr<SharedTask<TNextResult, TResult>> nextShared =
 			m_sharedTaskResult->Then(std::move(function));
 		return Task<TNextResult>(std::move(nextShared));
 	}

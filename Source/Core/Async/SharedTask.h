@@ -5,7 +5,7 @@
 #pragma once
 #include "Scheduler.h"
 #include "Worker.h"
-#include "SharedTaskContinuation.h"
+#include "ITaskContinuation.h"
 #include "SharedTaskResult.h"
 
 namespace PAL
@@ -14,38 +14,10 @@ namespace PAL
 	/// The task implementation base 
 	/// Contains shared implementation that both void and typed results require
 	/// </summary>
-	template<typename TParam, typename TResult>
+	template<typename TResult, typename TParam>
 	class SharedTask : 
-		public SharedTaskResult<TResult>, 
-		public SharedTaskContinuation<TParam>
-	{
-		template<typename TOther>
-		friend class Task;
-		template<typename TOther>
-		friend class SharedTaskResult;
-
-	private:
-		/// <summary>
-		/// Initializes a new instance of the SharedTask class
-		/// </summary>
-		SharedTask(std::function<TResult(Task<TParam>)>&& function);
-
-		void Schedule();
-		void Execute();
-
-	private:
-		std::weak_ptr<SharedTask> m_weakSelf;
-		std::function<TResult(Task<TParam>)> m_function;
-	};
-
-	/// <summary>
-	/// The task implementation base 
-	/// Contains shared implementation that both void and typed results require
-	/// </summary>
-	template<typename TResult>
-	class SharedTask<void, TResult> : 
-		public SharedTaskResult<TResult>, 
-		public SharedTaskContinuation<void>
+		public SharedTaskResult<TResult>,
+		public ITaskContinuation
 	{
 		template<typename TOther>
 		friend class Task;
@@ -56,44 +28,113 @@ namespace PAL
 		/// <summary>
 		/// Create a task
 		/// </summary>
-		static std::shared_ptr<SharedTask<void, TResult>> _stdcall Create(
-			std::function<TResult(void)>&& function);
+		static std::shared_ptr<SharedTask<TResult, TParam>> Create(
+			std::function<TResult(Task<TParam>)>&& function,
+			std::shared_ptr<SharedTaskResult<TParam>>&& prevSharedTaskResult);
 
 		/// <summary>
 		/// Initializes a new instance of the SharedTask class
 		/// </summary>
 		SharedTask(
-			std::function<TResult(void)>&& function,
-			std::shared_ptr<SharedTaskResult<void>>&& prevSharedTaskResult);
+			std::function<TResult(Task<TParam>)>&& function,
+			std::shared_ptr<SharedTaskResult<TParam>>&& prevSharedTaskResult);
 
-		void Schedule();
+		virtual void Schedule() override final;
 		void Execute();
 
 	private:
+		std::weak_ptr<SharedTask<TResult, TParam>> m_weakSelf;
+		std::shared_ptr<SharedTaskResult<TParam>> m_prevSharedTaskResult;
+		std::function<TResult(Task<TParam>)> m_function;
+	};
+
+	/// <summary>
+	/// The task implementation base 
+	/// Contains shared implementation that both void and typed results require
+	/// </summary>
+	template<typename TResult>
+	class SharedTask<TResult, void> : 
+		public SharedTaskResult<TResult>, 
+		public ITaskContinuation
+	{
+		template<typename TOther>
+		friend class Task;
+		template<typename TOther>
+		friend class SharedTaskResult;
+
+	private:
+		/// <summary>
+		/// Create a task
+		/// </summary>
+		static std::shared_ptr<SharedTask<TResult, void>> Create(
+			std::function<TResult(void)>&& function);
+		static std::shared_ptr<SharedTask<TResult, void>> CreateAndSchedule(
+			std::function<TResult(void)>&& function);
+
+		/// <summary>
+		/// Initializes a new instance of the SharedTask class
+		/// </summary>
+		SharedTask(std::function<TResult(void)>&& function);
+
+		virtual void Schedule() override final;
+		void Execute();
+
+	private:
+		std::weak_ptr<SharedTask<TResult, void>> m_weakSelf;
 		std::function<TResult(void)> m_function;
 	};
 
-	template<typename TParam, typename TResult>
-	SharedTask<TParam, TResult>::SharedTask(
+	template<typename TResult, typename TParam>
+	SharedTask<TResult, TParam>::SharedTask(
 		std::function<TResult(Task<TParam>)>&& function,
 		std::shared_ptr<SharedTaskResult<TParam>>&& prevSharedTaskResult) :
-		SharedTaskContinuation<TParam>(std::move(prevSharedTaskResult)),
-		SharedTaskResult<TResult>(),
-		m_function(std::move(function))
+		m_function(std::move(function)),
+		m_prevSharedTaskResult(std::move(prevSharedTaskResult))
 	{
 	}
 
-	template<typename TResult>
-	/*static*/ std::shared_ptr<SharedTask<void, TResult>> SharedTask<void, TResult>::Create(
-		std::function<TResult(void)>&& function)
+	template<typename TResult, typename TParam>
+	/*static*/ std::shared_ptr<SharedTask<TResult, TParam>> SharedTask<TResult, TParam>::Create(
+		std::function<TResult(Task<TParam>)>&& function,
+		std::shared_ptr<SharedTaskResult<TParam>>&& prevSharedTaskResult)
 	{
 		// Create the shared task
-		std::shared_ptr<SharedTask<void, TResult>> sharedTask =
-			std::shared_ptr<SharedTask<void, TResult>>(
-				new SharedTask<void, TResult>(std::move(function)));
+		std::shared_ptr<SharedTask<TResult, TParam>> sharedTask =
+			std::shared_ptr<SharedTask<TResult, TParam>>(
+				new SharedTask<TResult, TParam>(
+					std::move(function),
+					std::move(prevSharedTaskResult)));
 
 		// Take a weak reference on ourself
 		sharedTask->m_weakSelf = sharedTask;
+		sharedTask->m_weakSelfResult = sharedTask;
+
+		return sharedTask;
+	}
+
+	template<typename TResult>
+	/*static*/ std::shared_ptr<SharedTask<TResult, void>> SharedTask<TResult, void>::Create(
+		std::function<TResult(void)>&& function)
+	{
+		// Create the shared task
+		std::shared_ptr<SharedTask<TResult, void>> sharedTask =
+			std::shared_ptr<SharedTask<TResult, void>>(
+				new SharedTask<TResult, void>(std::move(function)));
+
+		// Take a weak reference on ourself
+		sharedTask->m_weakSelf = sharedTask;
+		sharedTask->m_weakSelfResult = sharedTask;
+
+		return sharedTask;
+	}
+
+	template<typename TResult>
+	/*static*/ std::shared_ptr<SharedTask<TResult, void>> SharedTask<TResult, void>::CreateAndSchedule(
+		std::function<TResult(void)>&& function)
+	{
+		// Create the shared task
+		std::shared_ptr<SharedTask<TResult, void>> sharedTask = 
+			Create(std::move(function));
 
 		// Schedule the newly created task
 		sharedTask->Schedule();
@@ -102,15 +143,15 @@ namespace PAL
 	}
 
 	template<typename TResult>
-	SharedTask<void, TResult>::SharedTask(std::function<TResult(void)>&& function) :
+	SharedTask<TResult, void>::SharedTask(std::function<TResult(void)>&& function) :
 		m_function(std::move(function))
 	{
 	}
 
-	template<typename TResult>
-	void SharedTask<void, TResult>::Schedule()
+	template<typename TResult, typename TParam>
+	void SharedTask<TResult, TParam>::Schedule()
 	{
-		std::shared_ptr<SharedTaskResult<TResult>> self = m_weakSelf.lock();
+		std::shared_ptr<SharedTask<TResult, TParam>> self = m_weakSelf.lock();
 		if (self == nullptr)
 		{
 			throw std::runtime_error("The self reference was invalid.");
@@ -122,7 +163,42 @@ namespace PAL
 	}
 
 	template<typename TResult>
-	void SharedTask<void, TResult>::Execute()
+	void SharedTask<TResult, void>::Schedule()
+	{
+		std::shared_ptr<SharedTask<TResult, void>> self = m_weakSelf.lock();
+		if (self == nullptr)
+		{
+			throw std::runtime_error("The self reference was invalid.");
+		}
+
+		std::shared_ptr<Job> job = std::make_shared<Job>(
+			std::bind(&SharedTask::Execute, self));
+		Worker::GetActive().GetScheduler().DispatchJob(std::move(job));
+	}
+
+	template<typename TResult, typename TParam>
+	void SharedTask<TResult, TParam>::Execute()
+	{
+		// Pass along the previous task
+		Task<TParam> prevTask(std::move(m_prevSharedTaskResult));
+		TResult result = m_function(std::move(prevTask));
+
+		{
+			// Protect access to the result and status
+			std::lock_guard<std::mutex> lock(m_mutex);
+
+			m_result = std::move(result);
+			m_isCompleted = true;
+
+			if (m_continuationTask != nullptr)
+			{
+				m_continuationTask->Schedule();
+			}
+		}
+	}
+
+	template<typename TResult>
+	void SharedTask<TResult, void>::Execute()
 	{
 		TResult result = m_function();
 

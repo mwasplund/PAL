@@ -14,8 +14,7 @@ namespace PAL
 	class Task;
 	template<typename TResult>
 	class SharedTaskResult;
-	template<typename TParam>
-	class SharedTaskContinuation;
+	class ITaskContinuation;
 	template<typename TParam, typename TResult>
 	class SharedTask;
 

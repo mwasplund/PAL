@@ -18,14 +18,36 @@ namespace PAL
 		const TResult& Get() const;
 
 		template<typename TNextResult>
-		std::shared_ptr<SharedTask<TResult, TNextResult>> Then(
+		std::shared_ptr<SharedTask<TNextResult, TResult>> Then(
 			std::function<TNextResult(Task<TResult>)>&& function);
 
 	protected:
 		mutable std::mutex m_mutex;
-		std::weak_ptr<SharedTaskResult<TResult>> m_weakSelf;
-		std::shared_ptr<SharedTaskContinuation<TResult>> m_continuationTask;
+		std::weak_ptr<SharedTaskResult<TResult>> m_weakSelfResult;
+		std::shared_ptr<ITaskContinuation> m_continuationTask;
 		TResult m_result;
+		bool m_isCompleted;
+	};
+
+	template<>
+	class SharedTaskResult<void>
+	{
+		template<typename TOther>
+		friend class Task;
+
+	protected:
+		SharedTaskResult();
+
+		void Get() const;
+
+		template<typename TNextResult>
+		std::shared_ptr<SharedTask<TNextResult, void>> Then(
+			std::function<TNextResult(Task<void>)>&& function);
+
+	protected:
+		mutable std::mutex m_mutex;
+		std::weak_ptr<SharedTaskResult<void>> m_weakSelfResult;
+		std::shared_ptr<ITaskContinuation> m_continuationTask;
 		bool m_isCompleted;
 	};
 
@@ -54,21 +76,14 @@ namespace PAL
 
 	template<typename TResult>
 	template<typename TNextResult>
-	std::shared_ptr<SharedTask<TResult, TNextResult>> SharedTaskResult<TResult>::Then(
+	std::shared_ptr<SharedTask<TNextResult, TResult>> SharedTaskResult<TResult>::Then(
 		std::function<TNextResult(Task<TResult>)>&& function)
 	{
-		std::shared_ptr<SharedTask> self = m_weakSelf.lock();
-		if (self == nullptr)
-		{
-			throw std::runtime_error("The self reference was invalid.");
-		}
-
 		// Create the shared task
-		std::shared_ptr<SharedTask<TResult, TNextResult>> nextSharedTask =
-			std::shared_ptr<SharedTask<TResult, TNextResult>>(
-				new SharedTask<TResult, TNextResult>(
-					std::move(function),
-					self));
+		std::shared_ptr<SharedTask<TNextResult, TResult>> nextSharedTask =
+			SharedTask<TNextResult, TResult>::Create(
+				std::move(function),
+				m_weakSelfResult.lock());
 		{
 			// Protect access to the result and status
 			std::lock_guard<std::mutex> lock(m_mutex);
@@ -84,7 +99,7 @@ namespace PAL
 			// If this task has already completed schedule the next task
 			if (m_isCompleted)
 			{
-				// TODO Schedule
+				m_continuationTask->Schedule();
 			}
 		}
 
