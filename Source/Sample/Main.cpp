@@ -17,14 +17,16 @@ int main()
 	{
 		std::wcout << L"Open File..." << std::endl;
 
-		PAL::IFile::GetFileFromPathAsync(L"TestFile.txt").Then<void>(
-			[](PAL::Task<std::shared_ptr<PAL::IFile>> task)
-			{
-				std::wcout << L"File Opened." << std::endl;
-				std::shared_ptr<PAL::IFile> file = task.Get();
-			});
+		//PAL::IFile::GetFileFromPathAsync(L"TestFile.txt").Then<int>(
+		//	[](PAL::Task<std::shared_ptr<PAL::IFile>> task)
+		//	{
+		//		std::wcout << L"File Opened." << std::endl;
+		//		std::shared_ptr<PAL::IFile> file = task.Get();
 
-		int value = PAL::Task<int>::Create(
+		//		return 1;
+		//	});
+
+		PAL::Task<int> mainTask = PAL::Task<int>::Create(
 			[]() -> int
 			{
 				return 1 + 1;
@@ -32,9 +34,9 @@ int main()
 				[](PAL::Task<int> result) -> int
 				{
 					return result.Get() * 5;
-				}).Get();
+				});
 
-		value++;
+		//value++;
 	}, true);
 
 	std::wcout << L"Run Application..." << std::endl;

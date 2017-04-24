@@ -173,12 +173,12 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
+  <Import Project="$(SourceDir)\Core\PAL.Public.props" />
   <ItemGroup>
-    <ProjectReference Include="..\Win32\PAL.Win32.vcxproj">
+    <ProjectReference Include="$(SourceDir)\Win32\PAL.Win32.vcxproj">
       <Project>{1007f1de-8bc9-4761-a81f-074fdd180e59}</Project>
     </ProjectReference>
   </ItemGroup>

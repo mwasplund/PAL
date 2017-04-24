@@ -13,6 +13,10 @@ namespace PAL
 	template<typename TResult>
 	class Task;
 	template<typename TResult>
+	class SharedTaskResult;
+	template<typename TParam>
+	class SharedTaskContinuation;
+	template<typename TParam, typename TResult>
 	class SharedTask;
 
 	// EventLogger

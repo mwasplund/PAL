@@ -126,5 +126,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Async\SharedTask.h">
       <Filter>Async</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Async\SharedTaskContinuation.h">
+      <Filter>Async</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Async\SharedTaskResult.h">
+      <Filter>Async</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
