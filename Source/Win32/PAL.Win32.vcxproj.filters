@@ -10,9 +10,15 @@
     <ClInclude Include="File.h">
       <Filter>File</Filter>
     </ClInclude>
+    <ClInclude Include="FileStream.h">
+      <Filter>File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="File.cpp">
+      <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="FileStream.cpp">
       <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>

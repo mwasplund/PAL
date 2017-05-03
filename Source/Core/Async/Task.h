@@ -28,7 +28,10 @@ namespace PAL
 		/// <summary>
 		/// Initializes a new instance of the Task class
 		/// </summary>
-		Task(std::shared_ptr<SharedTaskResult<TResult>>&& sharedTaskResult);
+		Task(std::shared_ptr<SharedTaskResult<TResult>>&& sharedTaskResult) :
+			m_sharedTaskResult(std::move(sharedTaskResult))
+		{
+		}
 
 	public:
 		/// <summary>
@@ -50,6 +53,46 @@ namespace PAL
 		std::shared_ptr<SharedTaskResult<TResult>> m_sharedTaskResult;
 	};
 
+	/// <summary>
+	/// The task
+	/// </summary>
+	template<>
+	class Task<void>
+	{
+		template<typename TOtherResult>
+		friend class Task;
+		template<typename TOtherResult, typename TOtherParam>
+		friend class SharedTask;
+
+	private:
+		/// <summary>
+		/// Initializes a new instance of the Task class
+		/// </summary>
+		Task(std::shared_ptr<SharedTaskResult<void>>&& sharedTaskResult) :
+			m_sharedTaskResult(std::move(sharedTaskResult))
+		{
+		}
+
+	public:
+		/// <summary>
+		/// Attach a continuation
+		/// </summary>
+		template<typename TNextResult>
+		Task<TNextResult> Then(
+			std::function<TNextResult(Task<void>)>&& function);
+
+		/// <summary>
+		/// Get the resulting value
+		/// </summary>
+		void Get();
+
+	private:
+		/// <summary>
+		/// The shared task
+		/// </summary>
+		std::shared_ptr<SharedTaskResult<void>> m_sharedTaskResult;
+	};
+
 	template<typename TResult>
 	/*static*/ Task<TResult> Task<TResult>::Create(std::function<TResult(void)>&& function)
 	{
@@ -57,12 +100,6 @@ namespace PAL
 		std::shared_ptr<SharedTask<TResult, void>> sharedTask =
 			SharedTask<TResult, void>::CreateAndSchedule(std::move(function));
 		return Task<TResult>(std::move(sharedTask));
-	}
-
-	template<typename TResult>
-	Task<TResult>::Task(std::shared_ptr<SharedTaskResult<TResult>>&& sharedTaskResult) :
-		m_sharedTaskResult(std::move(sharedTaskResult))
-	{
 	}
 
 	template<typename TResult>
@@ -80,4 +117,5 @@ namespace PAL
 	{
 		return m_sharedTaskResult->Get();
 	}
+
 } // PAL

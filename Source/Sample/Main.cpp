@@ -4,6 +4,8 @@
 
 #include "pch.h"
 
+#include <ppl.h>
+
 /// <summary>
 /// The root of all evil
 /// </summary>
@@ -17,15 +19,27 @@ int main()
 	{
 		std::wcout << L"Open File..." << std::endl;
 
-		//PAL::IFile::GetFileFromPathAsync(L"TestFile.txt").Then<int>(
-		//	[](PAL::Task<std::shared_ptr<PAL::IFile>> task)
-		//	{
-		//		std::wcout << L"File Opened." << std::endl;
-		//		std::shared_ptr<PAL::IFile> file = task.Get();
+		PAL::IFile::GetFileFromPathAsync(L"C:\\Users\\mwasplund\\Source\\Repos\\PAL\\test.txt").Then<void>(
+			[](PAL::Task<std::shared_ptr<PAL::IFile>> task)
+			{
+				std::wcout << L"File Opened." << std::endl;
+				std::shared_ptr<PAL::IFile> file = task.Get();
 
-		//		return 1;
-		//	});
+				file->OpenAsync().Then<void>(
+					[](PAL::Task<std::shared_ptr<PAL::IStream>> task)
+				{
+					std::wcout << L"File Opened for read." << std::endl;
+					std::shared_ptr<PAL::IStream> stream = task.Get();
 
+					stream->ReadAsync().Then<void>(
+						[](PAL::Task<std::wstring> task)
+					{
+						const std::wstring& value = task.Get();
+						std::wcout << value << std::endl;
+					});
+				});
+			});
+		
 		PAL::Task<int> mainTask = PAL::Task<int>::Create(
 			[]() -> int
 			{

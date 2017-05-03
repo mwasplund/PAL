@@ -13,7 +13,13 @@ namespace PAL
 		friend class Task;
 
 	protected:
-		SharedTaskResult();
+		SharedTaskResult() :
+			m_mutex(),
+			m_continuationTask(nullptr),
+			m_result(),
+			m_isCompleted(false)
+		{
+		}
 
 		const TResult& Get() const;
 
@@ -36,7 +42,12 @@ namespace PAL
 		friend class Task;
 
 	protected:
-		SharedTaskResult();
+		SharedTaskResult() :
+			m_mutex(),
+			m_continuationTask(nullptr),
+			m_isCompleted(false)
+		{
+		}
 
 		void Get() const;
 
@@ -50,15 +61,6 @@ namespace PAL
 		std::shared_ptr<ITaskContinuation> m_continuationTask;
 		bool m_isCompleted;
 	};
-
-	template<typename TResult>
-	SharedTaskResult<TResult>::SharedTaskResult() :
-		m_mutex(),
-		m_continuationTask(nullptr),
-		m_result(),
-		m_isCompleted(false)
-	{
-	}
 
 	template<typename TResult>
 	const TResult& SharedTaskResult<TResult>::Get() const

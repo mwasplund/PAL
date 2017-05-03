@@ -37,7 +37,11 @@ namespace PAL
 		/// </summary>
 		SharedTask(
 			std::function<TResult(Task<TParam>)>&& function,
-			std::shared_ptr<SharedTaskResult<TParam>>&& prevSharedTaskResult);
+			std::shared_ptr<SharedTaskResult<TParam>>&& prevSharedTaskResult) :
+			m_function(std::move(function)),
+			m_prevSharedTaskResult(std::move(prevSharedTaskResult))
+		{
+		}
 
 		virtual void Schedule() override final;
 		void Execute();
@@ -74,7 +78,10 @@ namespace PAL
 		/// <summary>
 		/// Initializes a new instance of the SharedTask class
 		/// </summary>
-		SharedTask(std::function<TResult(void)>&& function);
+		SharedTask(std::function<TResult(void)>&& function) :
+			m_function(std::move(function))
+		{
+		}
 
 		virtual void Schedule() override final;
 		void Execute();
@@ -84,14 +91,47 @@ namespace PAL
 		std::function<TResult(void)> m_function;
 	};
 
-	template<typename TResult, typename TParam>
-	SharedTask<TResult, TParam>::SharedTask(
-		std::function<TResult(Task<TParam>)>&& function,
-		std::shared_ptr<SharedTaskResult<TParam>>&& prevSharedTaskResult) :
-		m_function(std::move(function)),
-		m_prevSharedTaskResult(std::move(prevSharedTaskResult))
+	/// <summary>
+	/// The task implementation base 
+	/// Contains shared implementation that both void and typed results require
+	/// </summary>
+	template<typename TParam>
+	class SharedTask<void, TParam> :
+		public SharedTaskResult<void>,
+		public ITaskContinuation
 	{
-	}
+		template<typename TOther>
+		friend class Task;
+		template<typename TOther>
+		friend class SharedTaskResult;
+
+	private:
+		/// <summary>
+		/// Create a task
+		/// </summary>
+		static std::shared_ptr<SharedTask<void, TParam>> Create(
+			std::function<void(Task<TParam>)>&& function,
+			std::shared_ptr<SharedTaskResult<TParam>>&& prevSharedTaskResult);
+
+		/// <summary>
+		/// Initializes a new instance of the SharedTask class
+		/// </summary>
+		SharedTask(
+			std::function<void(Task<TParam>)>&& function,
+			std::shared_ptr<SharedTaskResult<TParam>>&& prevSharedTaskResult) :
+			m_function(std::move(function)),
+			m_prevSharedTaskResult(std::move(prevSharedTaskResult))
+		{
+		}
+
+		virtual void Schedule() override final;
+		void Execute();
+
+	private:
+		std::weak_ptr<SharedTask<void, TParam>> m_weakSelf;
+		std::shared_ptr<SharedTaskResult<TParam>> m_prevSharedTaskResult;
+		std::function<void(Task<TParam>)> m_function;
+	};
 
 	template<typename TResult, typename TParam>
 	/*static*/ std::shared_ptr<SharedTask<TResult, TParam>> SharedTask<TResult, TParam>::Create(
@@ -128,6 +168,25 @@ namespace PAL
 		return sharedTask;
 	}
 
+	template<typename TParam>
+	/*static*/ std::shared_ptr<SharedTask<void, TParam>> SharedTask<void, TParam>::Create(
+		std::function<void(Task<TParam>)>&& function,
+		std::shared_ptr<SharedTaskResult<TParam>>&& prevSharedTaskResult)
+	{
+		// Create the shared task
+		std::shared_ptr<SharedTask<void, TParam>> sharedTask =
+			std::shared_ptr<SharedTask<void, TParam>>(
+				new SharedTask<void, TParam>(
+					std::move(function),
+					std::move(prevSharedTaskResult)));
+
+		// Take a weak reference on ourself
+		sharedTask->m_weakSelf = sharedTask;
+		sharedTask->m_weakSelfResult = sharedTask;
+
+		return sharedTask;
+	}
+
 	template<typename TResult>
 	/*static*/ std::shared_ptr<SharedTask<TResult, void>> SharedTask<TResult, void>::CreateAndSchedule(
 		std::function<TResult(void)>&& function)
@@ -140,12 +199,6 @@ namespace PAL
 		sharedTask->Schedule();
 
 		return sharedTask;
-	}
-
-	template<typename TResult>
-	SharedTask<TResult, void>::SharedTask(std::function<TResult(void)>&& function) :
-		m_function(std::move(function))
-	{
 	}
 
 	template<typename TResult, typename TParam>
@@ -166,6 +219,20 @@ namespace PAL
 	void SharedTask<TResult, void>::Schedule()
 	{
 		std::shared_ptr<SharedTask<TResult, void>> self = m_weakSelf.lock();
+		if (self == nullptr)
+		{
+			throw std::runtime_error("The self reference was invalid.");
+		}
+
+		std::shared_ptr<Job> job = std::make_shared<Job>(
+			std::bind(&SharedTask::Execute, self));
+		Worker::GetActive().GetScheduler().DispatchJob(std::move(job));
+	}
+
+	template<typename TParam>
+	void SharedTask<void, TParam>::Schedule()
+	{
+		std::shared_ptr<SharedTask<void, TParam>> self = m_weakSelf.lock();
 		if (self == nullptr)
 		{
 			throw std::runtime_error("The self reference was invalid.");
@@ -207,6 +274,26 @@ namespace PAL
 			std::lock_guard<std::mutex> lock(m_mutex);
 
 			m_result = std::move(result);
+			m_isCompleted = true;
+
+			if (m_continuationTask != nullptr)
+			{
+				m_continuationTask->Schedule();
+			}
+		}
+	}
+
+	template<typename TParam>
+	void SharedTask<void, TParam>::Execute()
+	{
+		// Pass along the previous task
+		Task<TParam> prevTask(std::move(m_prevSharedTaskResult));
+		m_function(std::move(prevTask));
+
+		{
+			// Protect access to the result and status
+			std::lock_guard<std::mutex> lock(m_mutex);
+
 			m_isCompleted = true;
 
 			if (m_continuationTask != nullptr)

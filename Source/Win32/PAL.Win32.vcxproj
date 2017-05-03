@@ -150,9 +150,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="File.h" />
+    <ClInclude Include="FileStream.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="File.cpp" />
+    <ClCompile Include="FileStream.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(BuildDir)Cpp.Common.targets" />
