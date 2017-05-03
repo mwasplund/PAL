@@ -27,6 +27,14 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="FileStream.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="File.h" />
+    <ClInclude Include="FileStream.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2db9b084-d28d-4c26-a9d7-99d65103132a}</ProjectGuid>
     <Keyword>StaticLibrary</Keyword>
